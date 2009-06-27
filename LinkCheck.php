@@ -71,3 +71,9 @@ function gwlc_check_link($uri) {
     @curl_close($req);
     return $result;
 }
+
+// Default check behavior: see if the server returned a 2xx response.
+function _gwlc_check_default($req) {
+    return preg_match('/^2\d{2}/', curl_getinfo($req, CURLINFO_HTTP_CODE));
+}
+
