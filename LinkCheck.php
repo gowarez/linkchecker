@@ -5,20 +5,22 @@
  * Copyright © 2009 GoWarez.org.
  */
 
-function _gwlc_get_behavior($uri) {
-    static $overrides = array(
-        'rapidshare.com' => '_gwlc_check_rapidshare'
-    );
-    
+function _gwlc_get_host($uri) {
     $parsed = @parse_url($uri);
     if (!$parsed)
+        return null;
+    return preg_replace('/^(?:www|web)\./', '', strtolower($parsed['host']));
+}
+
+function _gwlc_match_override($uri, $overrides, $default=null) {
+    $host = _gwlc_get_host($uri);
+    if (!$host)
         return false;
-    $host = preg_replace('/^(?:www|web)\./', '', strtolower($parsed['host']));
     
     foreach ($overrides as $pattern => $fn) {
         if (preg_match('/^#.*#i?$/', $pattern)) {
             // PCRE pattern
-            if (preg_match($pattern, $uri))
+            if (preg_match($pattern, $host))
                 return $fn;
         } else {
             // Hostname
@@ -27,8 +29,23 @@ function _gwlc_get_behavior($uri) {
         }
     }
     
-    // No match; use default behavior.
-    return '_gwlc_check_default';
+    return $default;
+}
+
+function _gwlc_get_option_setter($uri) {
+    static $overrides = array(
+        'rapidshare.com' => '_gwlc_setopt_rapidshare'
+    );
+    
+    return _gwlc_match_override($uri, $overrides, '_gwlc_setopt_default');
+}
+
+function _gwlc_get_behavior($uri) {
+    static $overrides = array(
+        'rapidshare.com' => '_gwlc_check_rapidshare'
+    );
+    
+    return _gwlc_match_override($uri, $overrides, '_gwlc_check_default');
 }
 
 function gwlc_check_link($uri) {
@@ -36,4 +53,6 @@ function gwlc_check_link($uri) {
     if (!$behavior)
         return false;
 
+    $req = curl_init($uri);
+    
 }
