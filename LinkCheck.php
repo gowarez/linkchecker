@@ -38,7 +38,7 @@ function _gwlc_get_option_setter($uri) {
     return _gwlc_match_override($uri, $overrides, '_gwlc_setopt_default');
 }
 
-function _gwlc_get_behavior($uri) {
+function _gwlc_get_checker($uri) {
     static $overrides = array(
         'rapidshare.com' => '_gwlc_check_rapidshare'
     );
@@ -52,7 +52,7 @@ function _gwlc_setopt_default($req) {
 
 function gwlc_check_link($uri) {
     $setter = _gwlc_get_option_setter($uri);
-    $behavior = _gwlc_get_behavior($uri);
+    $behavior = _gwlc_get_checker($uri);
     if (!$setter || !$behavior)
         return false;
 
@@ -95,7 +95,7 @@ if (false !== strpos($_SERVER['PHP_SELF'], 'LinkCheck.php')) {
     if ($uri) {
         echo "<dl><dt>URI:</dt><dd>$uri</dd><dt>Setter:</dt><dd>".
             _gwlc_get_option_setter($uri)."</dd><dt>Checker</dt><dd>".
-            _gwlc_get_behavior($uri)."</dd><dt>Result:</dt><dd>".
+            _gwlc_get_checker($uri)."</dd><dt>Result:</dt><dd>".
             (gwlc_check_link($uri) ? "OK" : "FAILURE").
             "</dd></dl>";
     }
