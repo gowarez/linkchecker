@@ -47,6 +47,7 @@ function _gwlc_get_checker($uri) {
         'megaupload.com' => '_gwlc_check_megaupload',
         '#megashares\.com$#' => '_gwlc_check_megashares',
         'depositfiles.com' => '_gwlc_check_depositfiles',
+        '#easy-share\.com$#' => '_gwlc_check_easyshare',
     );
     
     return _gwlc_match_override($uri, $overrides, '_gwlc_check_default');
@@ -118,6 +119,12 @@ function _gwlc_check_depositfiles($req, $response) {
     if (!_gwlc_check_default($req))
         return false;
     return (false === strpos($response, 'no_download_msg'));
+}
+
+function _gwlc_check_easyshare($req, $response) {
+    if (!_gwlc_check_default($req))
+        return false;
+    return (false === strpos($response, 'msg-err'));
 }
 
 // Choose your download service experience
