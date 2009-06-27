@@ -42,7 +42,8 @@ function _gwlc_get_option_setter($uri) {
 
 function _gwlc_get_checker($uri) {
     static $overrides = array(
-        'rapidshare.com' => '_gwlc_check_rapidshare'
+        'rapidshare.com' => '_gwlc_check_rapidshare',
+        'megaupload.com' => '_gwlc_check_megaupload'
     );
     
     return _gwlc_match_override($uri, $overrides, '_gwlc_check_default');
@@ -89,6 +90,13 @@ function _gwlc_check_rapidshare($req) {
         return false;
     
     return !preg_match('#^text/html#i', $type);
+}
+
+function _gwlc_check_megaupload($req, $response) {
+    if (!_gwlc_check_default($req))
+        return false;
+    return (strpos($response, 'but_dnld_file') !== false ||
+        strpos($response, 'captchacode') !== false);
 }
 
 if (false !== strpos($_SERVER['PHP_SELF'], 'LinkCheck.php')) {
