@@ -51,10 +51,23 @@ function _gwlc_setopt_default($req) {
 }
 
 function gwlc_check_link($uri) {
+    $setter = _gwlc_get_option_setter($uri);
     $behavior = _gwlc_get_behavior($uri);
-    if (!$behavior)
+    if (!$setter || !$behavior)
         return false;
 
     $req = curl_init($uri);
+    curl_setopt($req, CURLOPT_FOLLOWLOCATION, true);
+    curl_setopt($req, CURLOPT_MAXREDIRS, 6);
     
+    call_user_func($setter, $req, $uri);
+    
+    if (!curl_exec($req)) {
+        @curl_close($req);
+        return false;
+    }
+    
+    $result = call_user_func($behavior, $req, $uri);
+    @curl_close($req);
+    return $result;
 }
