@@ -77,3 +77,26 @@ function _gwlc_check_default($req) {
     return preg_match('/^2\d{2}/', curl_getinfo($req, CURLINFO_HTTP_CODE));
 }
 
+function _gwlc_check_rapidshare($req) {
+    $type = curl_getinfo($req, CURLINFO_CONTENT_TYPE);
+    if (!$type)
+        return false;
+    
+    return !preg_match('#^text/html#i', $type);
+}
+
+if (false !== strpos($_SERVER['PHP_SELF'], 'LinkCheck.php')) {
+    $uri = @$_GET['uri'];
+    
+    echo '<form action="" method="get"><label for="uri">Check: </label>'.
+        '<input type="text" id="uri" name="uri" value="'.$uri.'" '.
+        'size="50" /><br /><input type="submit" value="Check" /></form>';
+    
+    if ($uri) {
+        echo "<dl><dt>URI:</dt><dd>$uri</dd><dt>Setter:</dt><dd>".
+            _gwlc_get_option_setter($uri)."</dd><dt>Checker</dt><dd>".
+            _gwlc_get_behavior($uri)."</dd><dt>Result:</dt><dd>".
+            (gwlc_check_link($uri) ? "OK" : "FAILURE").
+            "</dd></dl>";
+    }
+}
