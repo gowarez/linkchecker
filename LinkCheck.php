@@ -52,6 +52,7 @@ function _gwlc_get_checker($uri) {
         'filefactory.com' => '_gwlc_check_filefactory',
         'uploading.com' => '_gwlc_check_uploading',
         '4shared.com' => '_gwlc_check_4shared',
+        'hotfile.com' => '_gwlc_check_hotfile',
     );
     
     return _gwlc_match_override($uri, $overrides, '_gwlc_check_default');
@@ -156,6 +157,12 @@ function _gwlc_check_4shared($req, $response) {
     if (!_gwlc_check_default($req))
         return false;
     return (false !== strpos($response, 'dbtn'));
+}
+
+function _gwlc_check_hotfile($req, $response) {
+    if (!_gwlc_check_default($req))
+        return false;
+    return (false !== strpos($response, 'Downloading'));
 }
 
 if (false !== strpos($_SERVER['PHP_SELF'], 'LinkCheck.php')) {
