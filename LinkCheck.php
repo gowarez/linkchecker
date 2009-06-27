@@ -48,6 +48,7 @@ function _gwlc_get_checker($uri) {
         '#megashares\.com$#' => '_gwlc_check_megashares',
         'depositfiles.com' => '_gwlc_check_depositfiles',
         '#easy-share\.com$#' => '_gwlc_check_easyshare',
+        'netload.in' => '_gwlc_check_netload',
     );
     
     return _gwlc_match_override($uri, $overrides, '_gwlc_check_default');
@@ -125,6 +126,13 @@ function _gwlc_check_easyshare($req, $response) {
     if (!_gwlc_check_default($req))
         return false;
     return (false === strpos($response, 'msg-err'));
+}
+
+function _gwlc_check_netload($req, $response) {
+    if (!_gwlc_check_default($req))
+        return false;
+    return (false === strpos($response, 'error.tpl') &&
+        false == strpos($response, "we don't host"));
 }
 
 if (false !== strpos($_SERVER['PHP_SELF'], 'LinkCheck.php')) {
