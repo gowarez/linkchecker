@@ -49,7 +49,9 @@ function _gwlc_get_checker($uri) {
         'depositfiles.com' => '_gwlc_check_depositfiles',
         '#easy-share\.com$#' => '_gwlc_check_easyshare',
         'netload.in' => '_gwlc_check_netload',
-        'filefactory.com' => '_gwlc_check_filefactory'
+        'filefactory.com' => '_gwlc_check_filefactory',
+        'uploading.com' => '_gwlc_check_uploading',
+        '4shared.com' => '_gwlc_check_4shared',
     );
     
     return _gwlc_match_override($uri, $overrides, '_gwlc_check_default');
@@ -141,6 +143,19 @@ function _gwlc_check_filefactory($req, $response) {
         return false;
     return (false === strpos($response, 'errorMessage') &&
         false == strpos($response, "File Not Found"));
+}
+
+function _gwlc_check_uploading($req, $response) {
+    // uploading.com actually does return 404 in some cases! <3!
+    if (!_gwlc_check_default($req))
+        return false;
+    return (false == strpos($response, 'FILE REMOVED'));
+}
+
+function _gwlc_check_4shared($req, $response) {
+    if (!_gwlc_check_default($req))
+        return false;
+    return (false !== strpos($response, 'dbtn'));
 }
 
 if (false !== strpos($_SERVER['PHP_SELF'], 'LinkCheck.php')) {
