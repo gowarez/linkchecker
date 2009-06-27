@@ -33,9 +33,7 @@ function _gwlc_match_override($uri, $overrides, $default=null) {
 }
 
 function _gwlc_get_option_setter($uri) {
-    static $overrides = array(
-        'rapidshare.com' => '_gwlc_setopt_rapidshare'
-    );
+    static $overrides = array();
     
     return _gwlc_match_override($uri, $overrides, '_gwlc_setopt_default');
 }
@@ -46,6 +44,10 @@ function _gwlc_get_behavior($uri) {
     );
     
     return _gwlc_match_override($uri, $overrides, '_gwlc_check_default');
+}
+
+function _gwlc_setopt_default($req) {
+    curl_setopt($req, CURLOPT_NOBODY, true);
 }
 
 function gwlc_check_link($uri) {
