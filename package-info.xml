@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!DOCTYPE package-info SYSTEM "http://www.simplemachines.org/xml/package-info">
+<package-info xmlns="http://www.simplemachines.org/xml/package-info">
+<id>gwoss:Link_Checker</id>
+<name>Link_Checker</name>
+<version>0.1</version>
+<type>modification</type>
+
+<install for="2.0 - 2.99.99">
+	<readme>Readme.txt</readme>
+	<modification format="xml">link_checker.xml</modification>
+</install>
+<uninstall for="2.0 - 2.99.99">
+	<modification format="xml" reverse="true">link_checker.xml</modification>
+</uninstall>
+
+</package-info>
