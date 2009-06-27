@@ -34,7 +34,8 @@ function _gwlc_match_override($uri, $overrides, $default=null) {
 
 function _gwlc_get_option_setter($uri) {
     static $overrides = array(
-        'rapidshare.com' => '_gwlc_setopt_rapidshare'
+        'rapidshare.com' => '_gwlc_setopt_rapidshare',
+        '#megashares\.com$#' => '_gwlc_setopt_megashares',
     );
     
     return _gwlc_match_override($uri, $overrides, '_gwlc_setopt_default');
@@ -43,7 +44,8 @@ function _gwlc_get_option_setter($uri) {
 function _gwlc_get_checker($uri) {
     static $overrides = array(
         'rapidshare.com' => '_gwlc_check_rapidshare',
-        'megaupload.com' => '_gwlc_check_megaupload'
+        'megaupload.com' => '_gwlc_check_megaupload',
+        '#megashares\.com$#' => '_gwlc_check_megashares',
     );
     
     return _gwlc_match_override($uri, $overrides, '_gwlc_check_default');
@@ -75,6 +77,13 @@ function _gwlc_setopt_default($req) {
     curl_setopt($req, CURLOPT_RETURNTRANSFER, true);
 }
 
+function _gwlc_setopt_megashares($req) {
+    _gwlc_setopt_default($req);
+    curl_setopt($req, CURLOPT_HEADER, true);
+    $stamp = time() + 800;
+    curl_setopt($req, CURLOPT_COOKIE, "freest=$stamp%3A");
+}
+
 // Default check behavior: see if the server returned a 2xx response.
 function _gwlc_check_default($req) {
     return preg_match('/^2\d{2}/', curl_getinfo($req, CURLINFO_HTTP_CODE));
@@ -98,6 +107,14 @@ function _gwlc_check_megaupload($req, $response) {
     return (strpos($response, 'but_dnld_file') !== false ||
         strpos($response, 'captchacode') !== false);
 }
+
+function _gwlc_check_megashares($req, $response) {
+    if (!_gwlc_check_default($req))
+        return false;
+    return (false !== strpos($response, 'Filename:'));
+}
+
+// Choose your download service experience
 
 if (false !== strpos($_SERVER['PHP_SELF'], 'LinkCheck.php')) {
     $uri = @$_GET['uri'];
