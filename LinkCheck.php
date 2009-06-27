@@ -127,8 +127,6 @@ function _gwlc_check_easyshare($req, $response) {
     return (false === strpos($response, 'msg-err'));
 }
 
-// Choose your download service experience
-
 if (false !== strpos($_SERVER['PHP_SELF'], 'LinkCheck.php')) {
     $uri = @$_GET['uri'];
     
