@@ -46,6 +46,7 @@ function _gwlc_get_checker($uri) {
         'rapidshare.com' => '_gwlc_check_rapidshare',
         'megaupload.com' => '_gwlc_check_megaupload',
         '#megashares\.com$#' => '_gwlc_check_megashares',
+        'depositfiles.com' => '_gwlc_check_depositfiles',
     );
     
     return _gwlc_match_override($uri, $overrides, '_gwlc_check_default');
@@ -112,6 +113,12 @@ function _gwlc_check_megashares($req, $response) {
     if (!_gwlc_check_default($req))
         return false;
     return (false !== strpos($response, 'Filename:'));
+}
+
+function _gwlc_check_depositfiles($req, $response) {
+    if (!_gwlc_check_default($req))
+        return false;
+    return (false === strpos($response, 'no_download_msg'));
 }
 
 // Choose your download service experience
