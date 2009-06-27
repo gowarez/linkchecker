@@ -49,6 +49,7 @@ function _gwlc_get_checker($uri) {
         'depositfiles.com' => '_gwlc_check_depositfiles',
         '#easy-share\.com$#' => '_gwlc_check_easyshare',
         'netload.in' => '_gwlc_check_netload',
+        'filefactory.com' => '_gwlc_check_filefactory'
     );
     
     return _gwlc_match_override($uri, $overrides, '_gwlc_check_default');
@@ -133,6 +134,13 @@ function _gwlc_check_netload($req, $response) {
         return false;
     return (false === strpos($response, 'error.tpl') &&
         false == strpos($response, "we don't host"));
+}
+
+function _gwlc_check_filefactory($req, $response) {
+    if (!_gwlc_check_default($req))
+        return false;
+    return (false === strpos($response, 'errorMessage') &&
+        false == strpos($response, "File Not Found"));
 }
 
 if (false !== strpos($_SERVER['PHP_SELF'], 'LinkCheck.php')) {
