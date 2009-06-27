@@ -33,7 +33,9 @@ function _gwlc_match_override($uri, $overrides, $default=null) {
 }
 
 function _gwlc_get_option_setter($uri) {
-    static $overrides = array();
+    static $overrides = array(
+        'rapidshare.com' => '_gwlc_setopt_rapidshare'
+    );
     
     return _gwlc_match_override($uri, $overrides, '_gwlc_setopt_default');
 }
@@ -44,10 +46,6 @@ function _gwlc_get_checker($uri) {
     );
     
     return _gwlc_match_override($uri, $overrides, '_gwlc_check_default');
-}
-
-function _gwlc_setopt_default($req) {
-    curl_setopt($req, CURLOPT_NOBODY, true);
 }
 
 function gwlc_check_link($uri) {
@@ -62,19 +60,27 @@ function gwlc_check_link($uri) {
     
     call_user_func($setter, $req, $uri);
     
-    if (!curl_exec($req)) {
+    if (!$response = curl_exec($req)) {
         @curl_close($req);
         return false;
     }
     
-    $result = call_user_func($behavior, $req, $uri);
+    $result = call_user_func($behavior, $req, $response, $uri);
     @curl_close($req);
     return $result;
+}
+
+function _gwlc_setopt_default($req) {
+    curl_setopt($req, CURLOPT_RETURNTRANSFER, true);
 }
 
 // Default check behavior: see if the server returned a 2xx response.
 function _gwlc_check_default($req) {
     return preg_match('/^2\d{2}/', curl_getinfo($req, CURLINFO_HTTP_CODE));
+}
+
+function _gwlc_setopt_rapidshare($req) {
+    curl_setopt($req, CURLOPT_NOBODY, true);
 }
 
 function _gwlc_check_rapidshare($req) {
