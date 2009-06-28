@@ -76,7 +76,8 @@ function _gwlc_get_checker($uri) {
         'egoshare.com' => '_gwlc_check_err_redirect',
         'vip-file.com' => '_gwlc_check_vipfile',
         'rnbload.com' => '_gwlc_check_err_redirect',
-        'kewlshare.com' => '_gwlc_check_err_redirect'
+        'kewlshare.com' => '_gwlc_check_err_redirect',
+        '#mega(porn|rotic).com$#' => '_gwlc_check_megaporn',
     );
     
     $override = _gwlc_match_override($uri, $overrides, '_gwlc_check_default');
@@ -293,6 +294,30 @@ function _gwlc_check_sharecash($req, $response) {
     return (false !== strpos($response, 'File Info'));
 }
 
+function _gwlc_check_zshare($req, $response) {
+    if (!_gwlc_check_default($req))
+        return false;
+    $url = curl_getinfo($req, CURLINFO_EFFECTIVE_URL);
+    return (false === strpos($url, 'file-404'));
+}
+
+function _gwlc_check_axifile($req, $response) {
+    if (!_gwlc_check_default($req))
+        return false;
+    return (false === strpos($response, 'not correct'));
+}
+
+function _gwlc_check_megaporn($req, $response) {
+    if (!_gwlc_check_default($req))
+        return false;
+    return (false === strpos($response, 'Unfortunately'));
+}
+
+function _gwlc_check_netgull($req, $response) {
+    if (!_gwlc_check_default($req))
+        return false;
+    return (false !== strpos($response, 'File name'));
+}
 
 
 if (false !== strpos($_SERVER['PHP_SELF'], 'LinkCheck.php')) {
