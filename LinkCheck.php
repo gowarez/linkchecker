@@ -51,6 +51,7 @@ function _gwlc_get_option_setter($uri) {
     static $overrides = array(
         'rapidshare.com' => '_gwlc_setopt_rapidshare',
         '#megashares\.com$#' => '_gwlc_setopt_megashares',
+        // Additional setter rules can go here
     );
     
     return _gwlc_match_override($uri, $overrides, '_gwlc_setopt_default');
@@ -77,7 +78,11 @@ function _gwlc_get_checker($uri) {
         'vip-file.com' => '_gwlc_check_vipfile',
         'rnbload.com' => '_gwlc_check_err_redirect',
         'kewlshare.com' => '_gwlc_check_err_redirect',
-        '#mega(porn|rotic).com$#' => '_gwlc_check_megaporn',
+        '#mega(porn|rotic)\.com$#' => '_gwlc_check_megaporn',
+        'bigshare.eu' => '_gwlc_check_bigshare',
+        'megashare.com' => '_gwlc_check_err_redirect',
+        '#filefront\.com$#' => '_gwlc_check_filefront',
+        // Additional checker rules can go here
     );
     
     $override = _gwlc_match_override($uri, $overrides, '_gwlc_check_default');
@@ -319,6 +324,31 @@ function _gwlc_check_netgull($req, $response) {
     return (false !== strpos($response, 'File name'));
 }
 
+function _gwlc_check_bigshare($req, $response) {
+    if (!_gwlc_check_default($req))
+        return false;
+    return (false !== strpos($response, 'File name'));
+}
+
+function _gwlc_check_filefront($req, $response) {
+    if (!_gwlc_check_default($req))
+        return false;
+    return (false !== strpos($response, 'Download File'));
+}
+
+function _gwlc_check_letitbit($req, $response) {
+    if (!_gwlc_check_default($req))
+        return false;
+    return (false !== strpos($response, 'File size'));
+}
+
+function _gwlc_check_freakshare($req, $response) {
+    if (!_gwlc_check_default($req))
+        return false;
+    return (false === strpos($response, 'Error'));
+}
+
+// Additional site implementations can go here
 
 if (false !== strpos($_SERVER['PHP_SELF'], 'LinkCheck.php')) {
     $uri = @$_GET['uri'];
