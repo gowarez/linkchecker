@@ -74,7 +74,14 @@ function _gwlc_get_checker($uri) {
         'enterupload.com' => '_gwlc_check_enterupload',
     );
     
-    return _gwlc_match_override($uri, $overrides, '_gwlc_check_default');
+    $override = _gwlc_match_override($uri, $overrides, '_gwlc_check_default');
+    if (!$override) {
+        $bare = preg_replace('/\.(com|net|org|ru)$/', '',
+            _gwlc_get_host($uri));
+        if (function_exists("_gwlc_check_$bare"))
+            return "_gwlc_check_$bare";
+    }
+    return $override;
 }
 
 function gwlc_check_link($uri) {
