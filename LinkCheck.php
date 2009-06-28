@@ -80,7 +80,7 @@ function _gwlc_get_checker($uri) {
     );
     
     $override = _gwlc_match_override($uri, $overrides, '_gwlc_check_default');
-    if (!$override) {
+    if ($override == '_gwlc_check_default') {
         $bare = preg_replace('/\.(com|net|org|ru)$/', '',
             _gwlc_get_host($uri));
         if (function_exists("_gwlc_check_$bare"))
