@@ -70,7 +70,8 @@ function _gwlc_get_checker($uri) {
         'hotfile.com' => '_gwlc_check_hotfile',
         'getupload.org' => '_gwlc_check_getupload',
         'mediafire.com' => '_gwlc_check_err_redirect',
-        'ziddu.com' => '_gwlc_check_err_redirect'
+        'ziddu.com' => '_gwlc_check_err_redirect',
+        'enterupload.com' => '_gwlc_check_enterupload',
     );
     
     return _gwlc_match_override($uri, $overrides, '_gwlc_check_default');
@@ -194,6 +195,12 @@ function _gwlc_check_err_redirect($req, $response) {
         return false;
     $url = curl_getinfo($req, CURLINFO_EFFECTIVE_URL);
     return (false === strpos($url, 'error'));
+}
+
+function _gwlc_check_enterupload($req, $response) {
+    if (!_gwlc_check_default($req))
+        return false;
+    return (false !== strpos($response, 'You have requested'));
 }
 
 if (false !== strpos($_SERVER['PHP_SELF'], 'LinkCheck.php')) {
