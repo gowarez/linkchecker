@@ -72,6 +72,11 @@ function _gwlc_get_checker($uri) {
         'mediafire.com' => '_gwlc_check_err_redirect',
         'ziddu.com' => '_gwlc_check_err_redirect',
         'enterupload.com' => '_gwlc_check_enterupload',
+        '#(ul|uploaded)\.to$#' => '_gwlc_check_uploaded_to',
+        'egoshare.com' => '_gwlc_check_err_redirect',
+        'vip-file.com' => '_gwlc_check_vipfile',
+        'rnbload.com' => '_gwlc_check_err_redirect',
+        'kewlshare.com' => '_gwlc_check_err_redirect'
     );
     
     $override = _gwlc_match_override($uri, $overrides, '_gwlc_check_default');
@@ -209,6 +214,86 @@ function _gwlc_check_enterupload($req, $response) {
         return false;
     return (false !== strpos($response, 'You have requested'));
 }
+
+function _gwlc_check_bitroad($req, $response) {
+    if (!_gwlc_check_default($req))
+        return false;
+    return (false !== strpos($response, 'Download a file'));
+}
+
+function _gwlc_check_badongo($req, $response) {
+    if (!_gwlc_check_default($req))
+        return false;
+    return (false !== strpos($response, 'finfo'));
+}
+
+function _gwlc_check_uploaded_to($req, $response) {
+    if (!_gwlc_check_default($req))
+        return false;
+    return (false !== strpos($response, 'download_form'));
+}
+
+function _gwlc_check_uploadbox($req, $response) {
+    if (!_gwlc_check_default($req))
+        return false;
+    return (false !== strpos($response, 'download_block'));
+}
+
+function _gwlc_check_vipfile($req, $response) {
+    if (!_gwlc_check_default($req))
+        return false;
+    return (false === strpos($response, 'file not found'));
+}
+
+function _gwlc_check_savefile($req, $response) {
+    if (!_gwlc_check_default($req))
+        return false;
+    return (false !== strpos($response, 'Filename:'));
+}
+
+function _gwlc_check_ifolder($req, $response) {
+    if (!_gwlc_check_default($req))
+        return false;
+    return (false !== strpos($response, 'folder_file_description'));
+}
+
+function _gwlc_check_turboupload($req, $response) {
+    if (!_gwlc_check_default($req))
+        return false;
+    return (false !== strpos($response, 'Download File'));
+}
+
+function _gwlc_check_gigasize($req, $response) {
+    if (!_gwlc_check_default($req))
+        return false;
+    return (false === strpos($response, 'Download error'));
+}
+
+function _gwlc_check_sharebee($req, $response) {
+    if (!_gwlc_check_default($req))
+        return false;
+    return (false !== strpos($response, 'Filename:'));
+}
+
+function _gwlc_check_usaupload($req, $response) {
+    if (!_gwlc_check_default($req))
+        return false;
+    return (false !== strpos($response, 'File size'));
+}
+
+function _gwlc_check_sms4file($req, $response) {
+    if (!_gwlc_check_default($req))
+        return false;
+    return (false !== strpos($response, 'File Name'));
+}
+
+function _gwlc_check_sharecash($req, $response) {
+    if (!_gwlc_check_default($req))
+        return false;
+    return (false !== strpos($response, 'File Info'));
+}
+
+
 
 if (false !== strpos($_SERVER['PHP_SELF'], 'LinkCheck.php')) {
     $uri = @$_GET['uri'];
