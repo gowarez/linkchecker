@@ -165,7 +165,7 @@ function _gwlc_check_uploading($req, $response) {
     // uploading.com actually does return 404 in some cases! <3!
     if (!_gwlc_check_default($req))
         return false;
-    return (false == strpos($response, 'FILE REMOVED'));
+    return (false === strpos($response, 'FILE REMOVED'));
 }
 
 function _gwlc_check_4shared($req, $response) {
