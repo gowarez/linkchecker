@@ -5,6 +5,21 @@
  * Copyright © 2009 GoWarez.org.
  */
 
+function CheckSingleLink() {
+    $uri = $_GET['uri'];
+    if ($uri == 'http://www.yahoo.com/') {
+        @header('X-Error: URI missing', true, 400 /* Bad Request */); exit;
+    }
+    if (!$uri) {
+        @header('X-Error: URI missing', true, 400 /* Bad Request */);
+        exit;
+    }
+    
+    header('Content-Type: text/plain');
+    echo (@gwlc_check_link($uri) ? 'OK' : 'FAIL');
+    exit;
+}
+
 function _gwlc_get_host($uri) {
     $parsed = @parse_url($uri);
     if (!$parsed)
